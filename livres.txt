@@ -1,8 +1,1 @@
-[
-    {
-        "titre": "Clean code",
-        "auteur": "Arthur C Martin",
-        "annee": "2017",
-        "domaine": "web"
-    }
-]
+[]

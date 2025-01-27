@@ -1,4 +1,7 @@
 <?php
+// Fonction pour charger les livres (déjà définie dans livres.php)
+include_once 'livres.php';
+
 // Fonction pour charger les emprunts depuis un fichier JSON
 function chargerEmprunts() {
     return file_exists('emprunts.txt') ? json_decode(file_get_contents('emprunts.txt'), true) : [];
@@ -8,9 +11,6 @@ function chargerEmprunts() {
 function sauvegarderEmprunts($emprunts) {
     file_put_contents('emprunts.txt', json_encode($emprunts, JSON_PRETTY_PRINT));
 }
-
-// Fonction pour charger les livres (déjà définie dans livres.php)
-include_once 'livres.php';
 
 // Gestion de l'emprunt d'un livre
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['emprunter'])) {
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['retourner'])) {
     $titreLivre = $_POST['titreRetour'];
 
     // Trouver le livre dans la liste des emprunts
-    $indexEmprunt = array_search($titreLivre, array_column($emprunts, 'titre'));
+    $indexEmprunt = array_search($titreLivre, array_column($emprunts, 'titre'), true);
     if ($indexEmprunt !== false) {
         // Récupérer toutes les informations du livre depuis l'emprunt
         $livreRetourne = $emprunts[$indexEmprunt];
@@ -107,11 +107,15 @@ $emprunts = chargerEmprunts();
         <h2 class="text-xl font-semibold mb-2">Emprunter un Livre</h2>
         <div class="mb-2">
             <label class="block">Titre du Livre :</label>
-            <input type="text" name="titre" class="w-full p-2 border rounded" required>
+            <label>
+                <input type="text" name="titre" class="w-full p-2 border rounded" required>
+            </label>
         </div>
         <div class="mb-2">
             <label class="block">Nom de l'Emprunteur :</label>
-            <input type="text" name="nom" class="w-full p-2 border rounded" required>
+            <label>
+                <input type="text" name="nom" class="w-full p-2 border rounded" required>
+            </label>
         </div>
         <button type="submit" name="emprunter" class="bg-green-500 text-white px-4 py-2 rounded">Emprunter</button>
     </form>
